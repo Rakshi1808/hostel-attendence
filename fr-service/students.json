@@ -1,0 +1,44 @@
+[
+  {
+    "id": "S101",
+    "name": "Arjun Kumar",
+    "room": 214,
+    "floor": 2,
+    "present": false
+  },
+  {
+    "id": "S102",
+    "name": "Priya Sharma",
+    "room": 312,
+    "floor": 3,
+    "present": true
+  },
+  {
+    "id": "S103",
+    "name": "Ravi Patel",
+    "room": 108,
+    "floor": 1,
+    "present": false
+  },
+  {
+    "id": "S104",
+    "name": "Sneha Reddy",
+    "room": 215,
+    "floor": 2,
+    "present": true
+  },
+  {
+    "id": "S105",
+    "name": "Karan Singh",
+    "room": 401,
+    "floor": 4,
+    "present": false
+  },
+  {
+    "id": "S106",
+    "name": "Divya Nair",
+    "room": 302,
+    "floor": 3,
+    "present": false
+  }
+]

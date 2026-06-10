@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+.env
+fr_service.log
+test_payload.json
+test_image.txt
+debug.py
+encode_test.py
+test_imports.py
+photos/
