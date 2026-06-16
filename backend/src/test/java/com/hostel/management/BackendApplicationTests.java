@@ -1,4 +1,4 @@
-package com.hostel.attendance;
+package com.hostel.management;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
