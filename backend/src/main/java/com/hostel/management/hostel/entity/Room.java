@@ -25,6 +25,9 @@ public class Room
     @Column(name = "block")
     private String block;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @Column(name = "capacity",nullable = false)
     private Integer capacity;
 
