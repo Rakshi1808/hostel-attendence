@@ -9,3 +9,7 @@ debug.py
 encode_test.py
 test_imports.py
 photos/
+
+.idea/
+backend/target/
+*.iml

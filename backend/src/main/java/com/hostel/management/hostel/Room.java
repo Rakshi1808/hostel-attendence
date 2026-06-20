@@ -1,4 +1,4 @@
-package com.hostel.management.hostel.entity;
+package com.hostel.management.hostel;
 
 import jakarta.persistence.*;
 import lombok.*;

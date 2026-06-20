@@ -1,6 +1,5 @@
-package com.hostel.management.hostel.repository;
+package com.hostel.management.hostel;
 
-import com.hostel.management.hostel.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoomRepository extends JpaRepository<Room,Integer> {

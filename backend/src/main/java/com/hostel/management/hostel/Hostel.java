@@ -1,4 +1,4 @@
-package com.hostel.management.hostel.entity;
+package com.hostel.management.hostel;
 
 
 import com.hostel.management.common.enums.Gender;
