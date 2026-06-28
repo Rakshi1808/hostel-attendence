@@ -9,7 +9,7 @@ import lombok.*;
 @Table(name = "students")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class Student
@@ -21,10 +21,10 @@ public class Student
     @Column(name = "name",nullable = false)
     private String name;
 
-    @Column(name = "email",nullable = false,unique = true)
-    private String email;
+    @Column(name = "personal_email",unique = true)
+    private String personalEmail;
 
-    @Column(name = "password",nullable = false,unique = true)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "student_phone",nullable = false,unique = true)
@@ -33,12 +33,12 @@ public class Student
     @Column(name = "year_of_study",nullable = false)
     private Integer yearOfStudy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="programme_id",nullable = false)
     private Programme programme;
 
-    @ManyToOne
-    @JoinColumn(name="room_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="room_id")
     private Room room;
 
 
