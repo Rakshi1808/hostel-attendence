@@ -1,5 +1,6 @@
 package com.hostel.management.student.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,9 @@ public class StudentActivationRequest
 {
     @NotBlank
     String rollNo;
+
     @NotBlank
+    @Email
     String personalEmail;
     @NotBlank
     String password;

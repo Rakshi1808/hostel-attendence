@@ -146,6 +146,10 @@ public class StudentService
     {
         Student student = getStudent(activationRequest.getRollNo());
 
+        if(studentRepository.existsByPersonalEmail(activationRequest.getPersonalEmail()))
+        {
+            throw new EmailAlreadyExistsException("give Email already exists");
+        }
         StudentActivation activation = activationRepository.findById(activationRequest.getRollNo())
                 .orElseThrow(()-> new ActivationNotFoundException("Activation code not found! Pleas generate code first"));
 
@@ -159,6 +163,7 @@ public class StudentService
                 if(activation.getActivationCode().equals(activationRequest.getActivationCode()))
                 {
                     student.setPassword(passwordEncoder.encode(activationRequest.getPassword()));
+
                     student.setPersonalEmail(activationRequest.getPersonalEmail());
                     student.setAccountStatus(AccountStatus.PROFILE_PENDING);
                     activation.setActivated(true);
