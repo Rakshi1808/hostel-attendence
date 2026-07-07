@@ -1,18 +1,24 @@
 package com.hostel.management.student.service;
 
 import com.hostel.management.common.enums.AccountStatus;
+import com.hostel.management.common.service.CommonService;
 import com.hostel.management.common.service.RandomCodeService;
-import com.hostel.management.student.dto.ActivationGenerateResponse;
-import com.hostel.management.student.dto.StudentActivationRequest;
-import com.hostel.management.student.dto.StudentCreateRequest;
-import com.hostel.management.student.dto.StudentSummaryResponse;
+import com.hostel.management.hostel.Room;
+import com.hostel.management.hostel.RoomRepository;
+import com.hostel.management.student.dto.*;
+import com.hostel.management.student.entity.ParentContact;
 import com.hostel.management.student.entity.Programme;
 import com.hostel.management.student.entity.Student;
 import com.hostel.management.student.entity.StudentActivation;
 import com.hostel.management.student.exception.*;
+import com.hostel.management.student.repository.ParentContactRepository;
 import com.hostel.management.student.repository.ProgrammeRepository;
 import com.hostel.management.student.repository.StudentActivationRepository;
 import com.hostel.management.student.repository.StudentRepository;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,19 +29,26 @@ import java.util.Optional;
 public class StudentService
 {
     private final StudentRepository studentRepository;
+    private final RoomRepository roomRepository;
     private final ProgrammeRepository programmeRepository;
     private final StudentActivationRepository activationRepository;
     private final RandomCodeService randomCodeService;
     private final PasswordEncoder passwordEncoder;
+    private final ParentContactRepository parentContactRepository;
+    private final CommonService commonService;
     public StudentService(StudentRepository studentRepository,ProgrammeRepository programmeRepository,
                           StudentActivationRepository activationRepository,RandomCodeService randomCodeService
-                            ,PasswordEncoder passwordEncoder)
+                            ,PasswordEncoder passwordEncoder,ParentContactRepository parentContactRepository,
+                          CommonService commonService, RoomRepository roomRepository)
     {
         this.studentRepository = studentRepository;
         this.programmeRepository = programmeRepository;
         this.activationRepository = activationRepository;
         this.randomCodeService = randomCodeService;
         this.passwordEncoder = passwordEncoder;
+        this.parentContactRepository = parentContactRepository;
+        this.commonService = commonService;
+        this.roomRepository = roomRepository;
     }
 
     private ActivationGenerateResponse mapToActivationResponse(StudentActivation create)
@@ -57,6 +70,27 @@ public class StudentService
         return studentRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student Not Found!"));
     }
+
+    private StudentProfileResponse mapToProfileResponse(
+            Student student)
+    {
+        ParentContact parentContact = parentContactRepository.findByStudentRollNo(student.getRollNo());
+        return StudentProfileResponse.builder()
+                .rollNo(student.getRollNo())
+                .name(student.getName())
+                .personalEmail(student.getPersonalEmail())
+                .studentPhone(student.getStudentPhone())
+                .programme(student.getProgramme().getProgrammeName())
+                .yearOfStudy(student.getYearOfStudy())
+                .hostelName(student.getRoom().getHostel().getName())
+                .roomNo(student.getRoom().getRoomNo())
+                .parentName(parentContact.getParentName())
+                .parentPhone(parentContact.getParentPhone())
+                .relation(parentContact.getRelation())
+                .accountStatus(student.getAccountStatus())
+                .build();
+    }
+
 
 
     public StudentSummaryResponse createStudent( StudentCreateRequest studentCreateRequest)
@@ -181,5 +215,35 @@ public class StudentService
             }
 
         return "Your login Activation is successful";
+    }
+
+    @Transactional
+    public StudentProfileResponse studentProfileUpdate( StudentProfileRequest studentProfileRequest)
+    {
+
+        Student student = commonService.getCurrentStudent();
+
+        if(!student.getAccountStatus().equals(AccountStatus.PROFILE_PENDING))
+            throw new RuntimeException("Bad Request");
+
+        Room room = roomRepository
+                .findByHostelIdAndRoomNoAndIsActiveTrue(studentProfileRequest.getHostelId(),
+                        studentProfileRequest.getRoomNo())
+        .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        student.setAccountStatus(AccountStatus.FACE_PENDING);
+        student.setRoom(room);
+        studentRepository.save(student);
+
+        ParentContact parentContact = ParentContact.builder()
+                .parentName(studentProfileRequest.getParentName())
+                .parentPhone(studentProfileRequest.getParentPhone())
+                .relation(studentProfileRequest.getRelation())
+                .student(student)
+                .build();
+        parentContactRepository.save(parentContact);
+
+        return mapToProfileResponse(student);
+
     }
 }

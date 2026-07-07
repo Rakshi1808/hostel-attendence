@@ -1,9 +1,6 @@
 package com.hostel.management.student.controller;
 
-import com.hostel.management.student.dto.ActivationGenerateResponse;
-import com.hostel.management.student.dto.StudentActivationRequest;
-import com.hostel.management.student.dto.StudentCreateRequest;
-import com.hostel.management.student.dto.StudentSummaryResponse;
+import com.hostel.management.student.dto.*;
 import com.hostel.management.student.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -47,6 +44,16 @@ public class StudentController
             (@Valid @RequestBody StudentActivationRequest studentActivationRequest)
     {
         String response = studentService.loginActivation(studentActivationRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<StudentProfileResponse> studetnProfile
+            (@Valid @RequestBody StudentProfileRequest studentProfileRequest)
+    {
+        StudentProfileResponse response = studentService.studentProfileUpdate(studentProfileRequest);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
