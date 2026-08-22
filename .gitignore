@@ -12,4 +12,5 @@ photos/
 
 .idea/
 backend/target/
-*.iml
+*.imlnode_modules/ 
+.vscode/ 
