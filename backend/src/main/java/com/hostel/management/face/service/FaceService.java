@@ -57,24 +57,26 @@ public class FaceService
             throw new RuntimeException(e.getMessage());
         }
     }
-    private String savePhoto(MultipartFile photo, String rollNo) throws IOException {
 
-        Path uploadDirectory = Paths.get(uploadPath);
+//    private String savePhoto(MultipartFile photo, String rollNo) throws IOException {
+//
+//        Path uploadDirectory = Paths.get(uploadPath);
+//
+//        Files.createDirectories(uploadDirectory);
+//
+//        String fileName = rollNo + ".jpg";
+//
+//        Path filePath = uploadDirectory.resolve(fileName);
+//
+//        Files.copy(
+//                photo.getInputStream(),
+//                filePath,
+//                StandardCopyOption.REPLACE_EXISTING
+//        );
+//
+//        return filePath.toString();
+//    }
 
-        Files.createDirectories(uploadDirectory);
-
-        String fileName = rollNo + ".jpg";
-
-        Path filePath = uploadDirectory.resolve(fileName);
-
-        Files.copy(
-                photo.getInputStream(),
-                filePath,
-                StandardCopyOption.REPLACE_EXISTING
-        );
-
-        return filePath.toString();
-    }
     @Transactional
     public FaceRegistrationResponse registerFace(MultipartFile photo)
     {
@@ -93,18 +95,12 @@ public class FaceService
         {
             throw new RuntimeException(response.getMessage());
         }
-        String photoPath = null;
+
         String embeddingJason = convertEmbedding(response.getEmbedding());
 
-        try {
-             photoPath = savePhoto(photo, student.getRollNo());
-
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save photo");
-        }
         FaceEmbedding faceEmbedding= FaceEmbedding.builder()
                 .student(student)
-                .photoPath(photoPath)
+                .photoPath(response.getPhotoPath())
                 .registeredBy(RegisteredBy.WARDEN)
                 .embedding(embeddingJason)
                 .build();
@@ -119,4 +115,6 @@ public class FaceService
         return faceResponse;
 
     }
+
+
 }

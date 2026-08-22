@@ -55,7 +55,37 @@ public class FlaskFaceClient implements FaceClient{
     }
 
     @Override
-    public VerifyFaceResponse verifyFace() {
-        return null;
+    public VerifyFaceResponse verifyFace(
+            MultipartFile photo,
+            String rollNo,
+            String embedding) {
+
+        MultiValueMap<String, Object> body =
+                new LinkedMultiValueMap<>();
+
+        try {
+            ByteArrayResource resource =
+                    new ByteArrayResource(photo.getBytes()) {
+                        @Override
+                        public String getFilename() {
+                            return photo.getOriginalFilename();
+                        }
+                    };
+            // if her code not work come here and check it
+            body.add("rollNo", rollNo);
+            body.add("photo", resource);
+            body.add("embedding", embedding);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read photo", e);
+        }
+
+        return restClient
+                .post()
+                .uri(pythonServerUrl + "/verify-face")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
+                .retrieve()
+                .body(VerifyFaceResponse.class);
     }
 }

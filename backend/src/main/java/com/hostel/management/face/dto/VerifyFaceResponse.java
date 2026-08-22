@@ -8,9 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VerifyFaceResponse {
-    boolean success;
-    String message;
-    float confidence;
-    boolean matched;
+    private boolean success;
+    private String message;
+    private float confidence;
 
 }

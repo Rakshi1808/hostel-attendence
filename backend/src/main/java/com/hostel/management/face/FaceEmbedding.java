@@ -40,4 +40,7 @@ public class FaceEmbedding
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
+
 }

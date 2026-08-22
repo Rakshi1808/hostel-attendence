@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class RegisterFaceResponse {
     boolean success;
-    String rollNo;
+    private String photoPath;
     String message;
     ArrayList<Float> embedding;
 }

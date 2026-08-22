@@ -6,5 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FaceClient {
     RegisterFaceResponse registerFace(MultipartFile photo, String rollNo);
-    VerifyFaceResponse verifyFace();
+
+    VerifyFaceResponse verifyFace(
+            MultipartFile photo,
+            String rollNo,
+            String embedding
+    );
+
 }
