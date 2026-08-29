@@ -5,9 +5,8 @@ import WardenDashboard  from "./components/WardenDashboard";
 import AdminDashboard   from "./components/AdminDashboard";
 
 export default function App() {
-  const [role, setRole] = useState(null); // null | student | warden | admin
+  const [role, setRole] = useState(null);
 
-  // on first load — check if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     const saved = localStorage.getItem("role");
@@ -17,9 +16,7 @@ export default function App() {
   function handleLogin(r) { setRole(r); }
 
   function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("roll_no");
+    localStorage.clear();
     setRole(null);
   }
 
